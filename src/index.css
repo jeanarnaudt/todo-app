@@ -1,7 +1,12 @@
 @import "tailwindcss";
 
-@import "./styles/colors.css";
+@import "./styles/variables.css";
 @import "./styles/boilerplate.css";
+@import "./styles/app.css";
+@import "./styles/form.css";
+@import "./styles/label.css";
+@import "./styles/todo-list.css";
+@import "./styles/todo.css";
+@import "./styles/filter.css";
 
-@custom-variant dark (&:where(.dark, .dark *));
 
