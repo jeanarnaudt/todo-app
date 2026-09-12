@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState} from 'react'
 import type * as React from 'react'
 
-import type {TodoProps} from '../lib/definitions.ts'
+import type {TodoComponentProps} from '../lib/definitions.ts'
 import {icons} from '../lib/icons.tsx'
 import {useTodos} from '../context/TodosContext.tsx'
 
-export default function Todo({id, text, done}: TodoProps) {
+export default function Todo({id, text, done, onEditingChange}: TodoComponentProps) {
 	const {toggleTodo, deleteTodo, editTodo} = useTodos()
 
 	const [isEditing, setIsEditing] = useState(false)
@@ -26,20 +26,20 @@ export default function Todo({id, text, done}: TodoProps) {
 		// Escape can leave this set; clear it or the next blur-save is swallowed.
 		cancelledRef.current = false
 		setDraft(text)
-		setIsEditing(true)
+		setEditing(true)
 	}
 
 	function commit() {
 		const trimmed = draft.trim()
 		// Empty input reverts; unchanged text skips a pointless state write.
 		if (trimmed !== '' && trimmed !== text) editTodo(id, trimmed)
-		setIsEditing(false)
+		setEditing(false)
 	}
 
 	function cancel() {
 		cancelledRef.current = true
 		setDraft(text)
-		setIsEditing(false)
+		setEditing(false)
 	}
 
 	function handleBlur() {
@@ -48,6 +48,13 @@ export default function Todo({id, text, done}: TodoProps) {
 			return
 		}
 		commit()
+	}
+
+	// Every editing transition goes through here so the owner of the row can
+	// drop `draggable` while the input is mounted.
+	function setEditing(isEditing: boolean) {
+		setIsEditing(isEditing)
+		onEditingChange?.(isEditing)
 	}
 
 	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {

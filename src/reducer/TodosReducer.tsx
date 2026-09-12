@@ -1,6 +1,6 @@
-import type {TodoProps, TodosAction} from '../lib/definitions.ts'
+import type {TodoType, TodosAction} from '../lib/definitions.ts'
 
-export function TodosReducer(state: TodoProps[], action: TodosAction): TodoProps[] {
+export function TodosReducer(state: TodoType[], action: TodosAction): TodoType[] {
 	switch (action.type) {
 		case 'ADD_TODO':
 			return [...state, action.payload]

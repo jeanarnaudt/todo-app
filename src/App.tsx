@@ -1,19 +1,24 @@
-import {useState} from 'react'
+import {useCallback, useState} from 'react'
 import type * as React from 'react'
 
 import {icons} from './lib/icons.tsx'
 import type {TodoType} from './lib/definitions.ts'
 import {useTheme} from './context/ThemeContext.tsx'
 import {useTodos} from './context/TodosContext.tsx'
+import {useDragReorder} from './hook/useDragReorder.tsx'
 
 import Todo from './components/Todo.tsx'
 import Filter, {type FilterType} from './components/Filter.tsx'
 
 export default function App() {
-	const {todos, addTodo, clearCompleted} = useTodos()
+	const {todos, addTodo, clearCompleted, reorderTodos} = useTodos()
 	const {theme, toggleTheme} = useTheme()
 	
 	const [filter, setFilter] = useState<FilterType>('all')
+	// Lifted out of Todo: a `draggable` ancestor breaks click-drag selection
+	// inside a descendant <input>, so the attribute has to be false already at
+	// mousedown time — which means state, not an imperative poke.
+	const [editingId, setEditingId] = useState<number | null>(null)
 
 	const filteredTodos = todos.filter((todo: TodoType) => {
 		if (filter === 'active') return !todo.done
@@ -22,6 +27,25 @@ export default function App() {
 	})
 	
 	const activeTodosCount = todos.filter((t: TodoType) => !t.done).length
+
+	// Only the unfiltered view, where a row's position is its real position.
+	const canReorder = filter === 'all'
+
+	const isLocked = useCallback((id: number) => id === editingId, [editingId])
+
+	const {draggingId, overId, dropPosition, announcement, clearOverId, getItemProps} = useDragReorder({
+		ids: filteredTodos.map((todo: TodoType) => todo.id),
+		enabled: canReorder,
+		onReorder: reorderTodos,
+		isLocked,
+	})
+
+	function itemClassName(id: number) {
+		const classes = ['todo-item']
+		if (id === draggingId) classes.push('dragging')
+		if (id === overId && dropPosition) classes.push(`drag-over-${dropPosition}`)
+		return classes.join(' ')
+	}
 
 	function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
 		if (e.key === 'Enter' && e.currentTarget.value.trim() !== '') {
@@ -56,13 +80,24 @@ export default function App() {
 					</form>
 				</section>
 				<section>
-					<ul className="todo-list">
+					<ul className={canReorder ? 'todo-list reorderable' : 'todo-list'}>
 						{filteredTodos.map((todo: TodoType) => (
-							<li key={todo.id} className="todo-item">
-								<Todo {...todo}/>
+							<li
+								key={todo.id}
+								className={itemClassName(todo.id)}
+								aria-describedby={canReorder ? 'reorder-hint' : undefined}
+								{...getItemProps(todo.id)}
+							>
+								<Todo
+									{...todo}
+									onEditingChange={isEditing => setEditingId(isEditing ? todo.id : null)}
+								/>
 							</li>
 						))}
-						<li className="controls">
+						{/* Excluded from reordering by omission: with no onDragOver to
+						    preventDefault, the browser cancels any drop here. The one
+						    handler stops the indicator sticking to the last row. */}
+						<li className="controls" onDragEnter={clearOverId}>
 							<div>
 								<p>{activeTodosCount} {activeTodosCount === 1 ? 'item' : 'items'} left</p>
 								<Filter filter={filter} setFilter={setFilter}/>
@@ -74,7 +109,13 @@ export default function App() {
 				<section>
 					<Filter filter={filter} setFilter={setFilter}/>
 				</section>
-				<p>Drag and drop to reorder list</p>
+				<p id="reorder-hint">
+					Drag and drop to reorder list
+					{/* Kept out of the visible design; native drag has no keyboard
+					    equivalent, so the shortcut has to be announced somewhere. */}
+					<span className="visually-hidden">, or hold Alt and press the up or down arrow key</span>
+				</p>
+				<div className="visually-hidden" role="status" aria-live="polite">{announcement}</div>
 			</main>
 		</>
 	)

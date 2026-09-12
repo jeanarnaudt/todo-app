@@ -14,6 +14,11 @@ export interface TodosContextType {
 	toggleTodo: (id: number) => void
 	deleteTodo: (id: number) => void
 	clearCompleted: () => void
+	reorderTodos: (draggedId: number, targetId: number) => void
+}
+
+export interface TodoComponentProps extends TodoType {
+	onEditingChange?: (isEditing: boolean) => void
 }
 
 export interface TodosProviderProps {

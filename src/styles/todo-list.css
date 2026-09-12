@@ -60,5 +60,49 @@
 				}
 			}
 		}
+		
+		/* Reordering (native drag-and-drop). `transition: none` is required, not
+		   cosmetic: boilerplate.css sets `transition: all 0.3s` on every element,
+		   which would make the drop indicator lag behind the cursor. */
+		&.reorderable {
+			.todo-item {
+				cursor: grab;
+				/* Selected text would otherwise start a competing text drag. */
+				user-select: none;
+				
+				&:focus-visible {
+					outline: 2px solid var(--color-filter-fg-active);
+					outline-offset: -2px;
+				}
+				
+				/* The edit field still needs selectable text. */
+				& p {
+					cursor: grab;
+				}
+				
+				& input[type="text"] {
+					cursor: text;
+					user-select: text;
+				}
+			}
+		}
+		
+		.todo-item.dragging {
+			opacity: 0.4;
+			transition: none;
+		}
+		
+		/* An inset box-shadow, not border-top/bottom: a border would change the
+		   row's clamp() height and shift the whole list mid-drag. */
+		.todo-item.drag-over-before {
+			box-shadow: inset 0 2px 0 0 var(--color-filter-fg-active);
+			transition: none;
+		}
+		
+		.todo-item.drag-over-after {
+			box-shadow: inset 0 -2px 0 0 var(--color-filter-fg-active);
+			transition: none;
+		}
+
 	}
 }

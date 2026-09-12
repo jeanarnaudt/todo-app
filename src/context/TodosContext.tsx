@@ -1,13 +1,13 @@
 import {createContext, useContext, useMemo, useCallback} from 'react'
 
 import {initialTodos} from '../lib/data.ts'
-import type {TodoProps, TodosContextType, TodosProviderProps} from '../lib/definitions.ts'
+import type {TodoType, TodosContextType, TodosProviderProps} from '../lib/definitions.ts'
 import {useLocalStorage} from '../hook/useLocalStorage.tsx'
 
 export const TodosContext = createContext<TodosContextType | null>(null)
 
 export default function TodosProvider({children}: TodosProviderProps) {
-	const [todos, setTodos] = useLocalStorage<TodoProps[]>('todos', initialTodos)
+	const [todos, setTodos] = useLocalStorage<TodoType[]>('todos', initialTodos)
 	
 	const addTodo = useCallback((text: string) => {
 		setTodos(prev => {
@@ -32,6 +32,24 @@ export default function TodosProvider({children}: TodosProviderProps) {
 		setTodos(prev => prev.filter(t => !t.done))
 	}, [setTodos])
 
+	// Id-based, not index-based: the rendered list is a derived array, and the
+	// lookups happen inside the updater so a concurrent delete cannot make the
+	// move act on a stale index. Unknown id, or a drop on itself, is a no-op.
+	const reorderTodos = useCallback((draggedId: number, targetId: number) => {
+		setTodos(prev => {
+			if (draggedId === targetId) return prev
+			const from = prev.findIndex(t => t.id === draggedId)
+			const to = prev.findIndex(t => t.id === targetId)
+			if (from === -1 || to === -1) return prev
+			const next = [...prev]
+			const [dragged] = next.splice(from, 1)
+			// Remove-then-insert: dragging down lands after the target, dragging
+			// up lands before it — the same rule the drop indicator previews.
+			next.splice(to, 0, dragged)
+			return next
+		})
+	}, [setTodos])
+
 	const value = useMemo<TodosContextType>(() => ({
 		todos,
 		setTodos,
@@ -40,7 +58,8 @@ export default function TodosProvider({children}: TodosProviderProps) {
 		toggleTodo,
 		deleteTodo,
 		clearCompleted,
-	}), [todos, setTodos, addTodo, editTodo, toggleTodo, deleteTodo, clearCompleted])
+		reorderTodos,
+	}), [todos, setTodos, addTodo, editTodo, toggleTodo, deleteTodo, clearCompleted, reorderTodos])
 
 	return (
 		<TodosContext.Provider value={value}>
