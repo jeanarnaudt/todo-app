@@ -1,0 +1,29 @@
+@layer components {
+	.filter {
+		display: grid;
+		grid-template-columns: repeat(3, min-content);
+		align-items: center;
+		grid-column-gap: calc(var(--spacing) * 5);
+		
+		button {
+			color: var(--color-filter-fg);
+			font-weight: 700;
+			font-size: 14px;
+			letter-spacing: -0.19px;
+			text-wrap: nowrap;
+			text-transform: capitalize;
+			
+			&:first-child {
+				margin-inline-start: 0;
+			}
+			
+			&:hover {
+				color: var(--color-filter-fg-hover);
+			}
+			
+			&.active {
+				color: var(--color-filter-fg-active);
+			}
+		}
+	}
+}

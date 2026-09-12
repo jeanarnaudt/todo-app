@@ -1,0 +1,64 @@
+@layer components {
+	.todo {
+		width: calc(100% - calc(20px * 2));
+		display: grid;
+		grid-template-columns: min-content 1fr min-content;
+		grid-auto-flow: column;
+		grid-column-gap: calc(var(--spacing) * 3);
+		align-items: center;
+		
+		input[type="checkbox"] {
+			display: none;
+			
+			&:checked {
+				& + label {
+					background-image: var(--gradient);
+					
+					&::before {
+						opacity: 0;
+					}
+					
+					&::after {
+						opacity: 1;
+					}
+				}
+				
+				& ~ p {
+					color: var(--color-item-fg-disabled);
+					text-decoration: line-through;
+				}
+			}
+		}
+		
+		p {
+			cursor: pointer;
+		}
+		
+		input[type="text"] {
+			width: 100%;
+			min-width: 0;
+			background-color: transparent;
+			border: none;
+			font-family: inherit;
+		}
+		
+		p, input[type="text"] {
+			padding-block-start: 2px;
+		}
+		
+		button {
+			width: clamp(0.75rem, 2.817vw + 0.09rem, 1.125rem);
+			height: clamp(0.75rem, 2.817vw + 0.09rem, 1.125rem);
+			display: none;
+			
+			li:hover & {
+				display: block;
+			}
+			
+			svg {
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+}

@@ -1,0 +1,46 @@
+@layer components {
+	label {
+		position: relative;
+		display: block;
+		width: 20px;
+		height: 20px;
+		background-color: var(--color-divider);
+		border-radius: 50%;
+		cursor: pointer;
+		overflow: hidden;
+		
+		@container main (min-width: 540px) {
+			width: 24px;
+			height: 24px;
+		}
+		
+		&:hover {
+			background-image: var(--gradient);
+		}
+		
+		&::before, &::after {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			z-index: 10;
+			display: block;
+		}
+		
+		&::before {
+			content: '';
+			width: calc(100% - 2px);
+			height: calc(100% - 2px);
+			background-color: var(--color-section-bg);
+			border-radius: 50%;
+			opacity: 1;
+		}
+		
+		&::after {
+			content: url('/src/assets/icon-check.svg');
+			width: 11px;
+			height: 22px;
+			opacity: 0;
+		}
+	}
+}

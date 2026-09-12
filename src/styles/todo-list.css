@@ -1,0 +1,64 @@
+@layer components {
+	.todo-list {
+		width: 100%;
+		display: grid;
+		grid-auto-rows: min-content;
+		grid-auto-flow: row;
+		
+		.todo-item, .controls {
+			display: grid;
+			place-items: center;
+		}
+		
+		.todo-item {
+			height: clamp(3.25rem, 5.634vw + 1.93rem, 4rem);
+			border-bottom: 1px solid var(--color-divider);
+		}
+		
+		.controls {
+			height: 50px;
+			
+			& > div {
+				width: calc(100% - calc(20px * 2));
+				display: grid;
+				grid-template-columns: repeat(2, min-content);
+				align-items: center;
+				align-content: center;
+				justify-content: space-between;
+				
+				@container main (min-width: 540px) {
+					grid-template-columns: repeat(3, auto);
+				}
+				
+				& > p, & > button {
+					width: min-content;
+					color: var(--color-filter-fg);
+					font-size: clamp(0.75rem, 0.939vw + 0.53rem, 0.875rem);
+					letter-spacing: -0.17px;
+					text-wrap: nowrap;
+					user-select: none;
+					
+					@container main (min-width: 540px) {
+						letter-spacing: -0.19px;
+					}
+				}
+				
+				button {
+					text-transform: capitalize;
+					
+					&:hover {
+						color: var(--color-filter-fg-hover);
+					}
+				}
+				
+				.filter {
+					display: none;
+					
+					@container main (min-width: 540px) {
+						display: grid !important;
+					}
+				}
+			}
+		}
+	}
+}

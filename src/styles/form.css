@@ -1,0 +1,17 @@
+@layer components {
+	form {
+		width: calc(100% - calc(20px * 2));
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-column-gap: calc(var(--spacing) * 3);
+		align-items: center;
+		
+		label::after {
+			display: none;
+		}
+		
+		input[type="text"]:focus + label {
+			background-image: var(--gradient);
+		}
+	}
+}

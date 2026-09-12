@@ -1,0 +1,103 @@
+@layer components {
+	header {
+		grid-column: 1 / -1;
+		grid-row: 1 / -1;
+		
+		position: relative;
+		z-index: 0;
+		display: block;
+		width: 100%;
+		height: 200px;
+		background-image: var(--bg-hero-mobile);
+		background-repeat: no-repeat;
+		background-size: cover;
+		
+		@media (width >= 540px) {
+			height: 300px;
+			background-image: var(--bg-hero-desktop);
+		}
+	}
+	
+	main {
+		grid-column: 2 / -2;
+		grid-row: 1 / -1;
+		
+		container: main / inline-size;
+		position: relative;
+		z-index: 10;
+		display: grid;
+		grid-auto-rows: min-content;
+		grid-auto-flow: row;
+		grid-row-gap: calc(var(--spacing) * 4);
+		
+		& > p {
+			color: var(--color-filter-fg);
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 1;
+			letter-spacing: -0.19px;
+			text-align: center;
+			margin-top: 28px;
+		}
+		
+		nav {
+			display: grid;
+			grid-auto-columns: min-content;
+			grid-auto-flow: column;
+			align-items: center;
+			justify-content: space-between;
+			padding-block: calc(var(--spacing) * 8);
+			
+			h1 {
+				color: var(--color-white);
+				font-size: 32px;
+				font-weight: 700;
+				line-height: 1;
+				letter-spacing: 13px;
+				text-transform: uppercase;
+				text-box-edge: cap alphabetic;
+				text-box-trim: trim-end;
+				
+				@container main (min-width: 540px) {
+					font-size: 40px;
+					letter-spacing: 15px;
+				}
+			}
+			
+			button {
+				width: 20px;
+				height: 20px;
+				
+				@container main (min-width: 540px) {
+					width: 26px;
+					height: 26px;
+				}
+				
+				svg {
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+		
+		section {
+			display: grid;
+			place-items: center;
+			background-color: var(--color-section-bg);
+			border-radius: 5px;
+			box-shadow: var(--shadow-xl);
+			
+			&:nth-of-type(1) {
+				height: clamp(3rem, 7.512vw + 1.239rem, 4rem);
+			}
+			
+			&:nth-of-type(3) {
+				height: 48px;
+				
+				@container main (min-width: 540px) {
+					display: none;
+				}
+			}
+		}
+	}
+}

@@ -8,6 +8,21 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>todo-app</title>
+    <script>
+      // Applied before React mounts so a stored dark theme paints dark on the
+      // very first frame. ThemeProvider re-applies the same attribute after hydration.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme')
+          var theme = stored ? JSON.parse(stored) : null
+          if (theme !== 'light' && theme !== 'dark') {
+            theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }
+          document.documentElement.dataset.theme = theme
+          document.documentElement.style.colorScheme = theme
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

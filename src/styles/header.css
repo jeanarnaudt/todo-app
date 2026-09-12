@@ -1,0 +1,28 @@
+header {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-block: calc(var(--spacing) * 10);
+	
+	h1 {
+		color: var(--color-white);
+		font-size: clamp(2rem, 3.756vw + 1.12rem, 2.5rem);
+		font-weight: 700;
+		line-height: 1;
+		letter-spacing: clamp(0.813rem, 0.939vw + 0.592rem, 0.938rem);
+		text-transform: uppercase;
+		text-box-edge: cap alphabetic;
+		text-box-trim: trim-end;
+	}
+	
+	button {
+		width: clamp(1.25rem, 2.817vw + 0.59rem, 1.625rem);
+		height: clamp(1.25rem, 2.817vw + 0.59rem, 1.625rem);
+		
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+}
