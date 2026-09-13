@@ -39,8 +39,8 @@ Add a screenshot of your solution here.
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [https://github.com/jeanarnaudt/todo-app](https://github.com/jeanarnaudt/todo-app.git)
+- Live Site URL: [https://todo-appfm.netlify.app](https://todo-appfm.netlify.app)
 
 ## My process
 
