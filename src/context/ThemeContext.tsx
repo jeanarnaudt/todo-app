@@ -2,8 +2,6 @@ import { createContext, useContext, useCallback, useEffect, useMemo } from 'reac
 import type { Theme, ThemeContextProps, ThemeProviderProps } from '../lib/definitions.ts'
 import { useLocalStorage } from '../hook/useLocalStorage.tsx'
 
-// Only consulted on the very first visit: once a choice is stored,
-// useLocalStorage's lazy initializer never calls this again.
 function getSystemTheme(): Theme {
 	return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
@@ -17,8 +15,6 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
 		setTheme(prev => prev === 'light' ? 'dark' : 'light')
 	}, [setTheme])
 
-	// The <html> attribute is the single source of truth the CSS variables
-	// key off; color-scheme keeps native controls and scrollbars in sync.
 	useEffect(() => {
 		document.documentElement.dataset.theme = theme
 		document.documentElement.style.colorScheme = theme

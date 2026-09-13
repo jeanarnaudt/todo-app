@@ -15,9 +15,6 @@ export default function App() {
 	const {theme, toggleTheme} = useTheme()
 	
 	const [filter, setFilter] = useState<FilterType>('all')
-	// Lifted out of Todo: a `draggable` ancestor breaks click-drag selection
-	// inside a descendant <input>, so the attribute has to be false already at
-	// mousedown time — which means state, not an imperative poke.
 	const [editingId, setEditingId] = useState<number | null>(null)
 
 	const filteredTodos = todos.filter((todo: TodoType) => {
@@ -28,7 +25,6 @@ export default function App() {
 	
 	const activeTodosCount = todos.filter((t: TodoType) => !t.done).length
 
-	// Only the unfiltered view, where a row's position is its real position.
 	const canReorder = filter === 'all'
 
 	const isLocked = useCallback((id: number) => id === editingId, [editingId])
@@ -111,8 +107,6 @@ export default function App() {
 				</section>
 				<p id="reorder-hint">
 					Drag and drop to reorder list
-					{/* Kept out of the visible design; native drag has no keyboard
-					    equivalent, so the shortcut has to be announced somewhere. */}
 					<span className="visually-hidden">, or hold Alt and press the up or down arrow key</span>
 				</p>
 				<div className="visually-hidden" role="status" aria-live="polite">{announcement}</div>

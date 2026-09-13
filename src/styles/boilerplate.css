@@ -40,8 +40,6 @@
 		}
 	}
 	
-	/* Defined locally rather than relying on Tailwind's sr-only — no utility
-	   classes are used anywhere else in the JSX. */
 	.visually-hidden {
 		position: absolute;
 		width: 1px;
